@@ -1,0 +1,47 @@
+[project]
+name = "pybiorythm-django-api-server-example"
+version = "1.0.0"
+description = "Django ASGI REST API server example for biorhythm data with token authentication"
+requires-python = ">=3.8,<3.13"
+dependencies = [
+    "django>=5.2.5",
+    "djangorestframework>=3.14.0",
+    "django-cors-headers>=4.0.0",
+    "python-dateutil>=2.8.0",
+    "pandas>=2.0.0",
+    "daphne>=4.0.0",
+    "channels>=4.0.0",
+    "biorythm @ git+https://github.com/dkdndes/pybiorythm.git",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-extensions",
+    "httpie",
+    "pytest-django",
+    "coverage>=7.0.0",
+]
+
+[tool.django]
+settings_module = "biorhythm_api.settings"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "biorhythm_api.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/migrations/*",
+    "*/venv/*",
+    "*/.venv/*",
+    "*/tests/*",
+    "manage.py",
+    "*/settings/*",
+    "*/wsgi.py",
+    "*/asgi.py",
+]

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+      - /app/.venv  # Exclude virtual environment from volume mount
+    environment:
+      - DEBUG=1
+      - PYTHONUNBUFFERED=1
+      - CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:8002
+    command: uv run daphne biorhythm_api.asgi:application -p 8001 -b 0.0.0.0
+    depends_on:
+      - db
+    
+  # PostgreSQL database for production use
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: biorhythm
+      POSTGRES_USER: biorhythm
+      POSTGRES_PASSWORD: biorhythm_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
