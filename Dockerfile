@@ -13,7 +13,11 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install dependencies
-RUN uv sync --frozen --no-cache
+RUN uv sync --no-cache
+
+# Set environment variables for Docker
+ENV DJANGO_SECRET_KEY=docker-api-secret-key-change-in-production
+ENV DEBUG=False
 
 # Copy application code
 COPY . .

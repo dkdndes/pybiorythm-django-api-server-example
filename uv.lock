@@ -961,7 +961,6 @@ wheels = [
 
 [[package]]
 name = "pybiorythm-django-api-server-example"
-version = "1.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "biorythm" },
