@@ -74,7 +74,7 @@ A production-ready Django REST API server with ASGI/Daphne integration for servi
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.9+
 - [uv](https://github.com/astral-sh/uv) package manager
 
 ### Installation with uv

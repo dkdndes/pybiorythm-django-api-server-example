@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     services:
       postgres:
@@ -43,31 +43,42 @@ jobs:
       run: uv run python manage.py migrate
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_biorhythm
+        DJANGO_SETTINGS_MODULE: biorhythm_api.settings
     
     - name: Create test user and token
       run: |
         DJANGO_SUPERUSER_PASSWORD=testpass uv run python manage.py createsuperuser \
           --username testuser --email test@example.com --noinput
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_biorhythm
+        DJANGO_SETTINGS_MODULE: biorhythm_api.settings
     
     - name: Run tests
       run: uv run python manage.py test
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_biorhythm
+        DJANGO_SETTINGS_MODULE: biorhythm_api.settings
     
     - name: Test API endpoints
       run: |
         # Start server in background
         uv run daphne biorhythm_api.asgi:application -p 8001 &
-        sleep 5
+        sleep 10
         
         # Test API endpoints
         curl -f http://localhost:8001/api/ || exit 1
         curl -f http://localhost:8001/admin/ || exit 1
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_biorhythm
+        DJANGO_SETTINGS_MODULE: biorhythm_api.settings
     
     - name: Run coverage
       run: |
         uv run coverage run --source='.' manage.py test
         uv run coverage report --fail-under=80
+      env:
+        DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_biorhythm
+        DJANGO_SETTINGS_MODULE: biorhythm_api.settings
 
   docker:
     runs-on: ubuntu-latest
